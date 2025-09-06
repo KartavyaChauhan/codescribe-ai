@@ -13,7 +13,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /main .
 FROM alpine:latest
 WORKDIR /
 COPY --from=builder /main .
-# Copy the .env file
-COPY .env .
 EXPOSE 8081
 CMD ["/main"]
