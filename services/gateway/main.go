@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gin-contrib/cors" // Import the new CORS package
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
@@ -33,13 +33,12 @@ var jwtKey []byte
 // --- Main Function ---
 func main() {
 	// Load .env file if it exists (for local development).
-	// In production (Kubernetes/Docker), variables are set by the environment.
 	godotenv.Load()
 
 	jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 	dsn := os.Getenv("DB_URL")
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database")
 	}
@@ -48,15 +47,13 @@ func main() {
 
 	r := gin.Default()
 
-	// --- Configure CORS Middleware ---
-	// This allows our React frontend to communicate with this Go backend.
+	// Configure CORS Middleware
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173"} // Your frontend's origin
+	config.AllowOrigins = []string{"http://localhost:5173"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
 	r.Use(cors.New(config))
 
-	// --- Define Routes ---
 	// Public routes
 	r.POST("/register", Register)
 	r.POST("/login", Login)
@@ -71,7 +68,7 @@ func main() {
 
 	// Run the server
 	r.Run(":8081") // Or your chosen port
-}
+} // <-- The main function correctly ends here.
 
 // --- Handler Functions ---
 
