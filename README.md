@@ -2,6 +2,8 @@
 
 A full-stack AI-powered code analysis platform built with React, Go, Python, and FastAPI.
 
+🚀 **Status**: CI/CD Pipeline Active - Automated Docker builds enabled!
+
 ## Features
 
 - 🔐 JWT-based authentication
