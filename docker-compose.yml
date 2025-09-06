@@ -1,0 +1,41 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80" # Map host port 5173 to container port 80 (nginx)
+    depends_on:
+      - gateway
+
+  gateway:
+    build: ./services/gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - ai_core
+    environment:
+      - DB_URL=host=postgres user=user password=password dbname=codescribe_db port=5432 sslmode=disable
+      - JWT_SECRET=your_very_secret_key_change_this
+
+  ai_core:
+    build: ./services/ai-core
+    ports:
+      - "8000:8000"
+    # Mount a volume to persist the downloaded Hugging Face models
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: codescribe_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  huggingface_cache:
