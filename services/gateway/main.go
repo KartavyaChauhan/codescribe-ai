@@ -32,10 +32,9 @@ var jwtKey []byte
 
 // --- Main Function ---
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// Load .env file if it exists (for local development).
+	// In production (Kubernetes/Docker), variables are set by the environment.
+	godotenv.Load()
 
 	jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
