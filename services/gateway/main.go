@@ -173,7 +173,7 @@ func QueryHandler(c *gin.Context) {
 		return
 	}
 
-	pythonServiceURL := "http://ai_core:8000/query"
+	pythonServiceURL := "http://ai-core:8000/query"
 	requestBody, err := json.Marshal(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create request for AI service"})
@@ -206,7 +206,7 @@ func AnalyzeHandler(c *gin.Context) {
 		return
 	}
 
-	pythonServiceURL := "http://ai_core:8000/analyze"
+	pythonServiceURL := "http://ai-core:8000/analyze"
 	requestBody, err := json.Marshal(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create request for AI service"})
