@@ -32,13 +32,13 @@ var jwtKey []byte
 
 // --- Main Function ---
 func main() {
-	// Load .env file if it exists (for local development).
 	godotenv.Load()
 
 	jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 	dsn := os.Getenv("DB_URL")
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	var err error // Declare err variable
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{}) // Use = to assign to global db
 	if err != nil {
 		log.Fatal("Failed to connect to database")
 	}
@@ -47,18 +47,15 @@ func main() {
 
 	r := gin.Default()
 
-	// Configure CORS Middleware
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:5173"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
 	r.Use(cors.New(config))
 
-	// Public routes
 	r.POST("/register", Register)
 	r.POST("/login", Login)
 
-	// Protected Route Group
 	api := r.Group("/api")
 	api.Use(AuthMiddleware())
 	{
@@ -66,12 +63,11 @@ func main() {
 		api.POST("/analyze", AnalyzeHandler)
 	}
 
-	// Run the server
-	r.Run(":8081") // Or your chosen port
-} // <-- The main function correctly ends here.
+	r.Run(":8081")
+}
 
-// --- Handler Functions ---
-
+// --- Handler Functions (Unchanged) ---
+// (All the other functions like Register, Login, AuthMiddleware, etc., remain exactly the same as before)
 func Register(c *gin.Context) {
 	var input struct {
 		Email    string `json:"email"`
@@ -111,7 +107,7 @@ func Login(c *gin.Context) {
 	}
 
 	var user User
-	db.First(&user, "email = ?", input.Email)
+	db.First(&user, "email = ?", input.Email) // This is the line that was failing (approx. 114)
 	if user.ID == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
