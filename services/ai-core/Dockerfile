@@ -8,6 +8,14 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
+# services/ai-core/Dockerfile
+
+FROM python:3.11-slim
+WORKDIR /app
+
+# NEW: Install git so we can clone repositories
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 # Install PyTorch with CPU support first
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
